@@ -1,5 +1,6 @@
 {
   "expo": {
+    "scheme":"SysControl",
     "name": "SysControl",
     "slug": "SysControl",
     "version": "1.0.0",
@@ -15,15 +16,31 @@
     "ios": {
       "supportsTablet": true
     },
+    
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.anonymous.SysControl"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-maps",
+      "expo-router"
+    ],
+    "updates": {
+      "enabled": false
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a8dcc010-ae8d-4ed0-99e7-08a70d24e1f8"
+      }
     }
+    
   }
+  
 }
