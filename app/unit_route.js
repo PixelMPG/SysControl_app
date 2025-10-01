@@ -5,6 +5,7 @@ import { useLocalSearchParams } from "expo-router";
 import { WebView } from "react-native-webview";
 import {Get_unit_route , Get_unit_stops} from "../lib/unit_route";
 import { SysMapRoutes } from "../lib/homeMapHtml";
+import Loading from "../components/Loading";
 
 export default function UnitRoute() {
   const { esn , icon } = useLocalSearchParams();
@@ -67,7 +68,7 @@ export default function UnitRoute() {
     }
   }, [mapReady, routeData]);
 
-  if (loading) return <ActivityIndicator size="large" color="#156082" style={{ flex:1 }} />;
+  if (loading) return <Loading/>;
 
   return (
     <View style={{ flex:1 }}>

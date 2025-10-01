@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState , useEffect} from "react";
 import {
   View,
   Text,
@@ -9,17 +9,34 @@ import {
   Image
 } from "react-native";
 import MenuItemCard from "./MenuItemCard";
-import { removeSession } from "../utils/session";
+import { loadSession, removeSession } from "../utils/session";
 import { useRouter } from 'expo-router';
+
 
 const { width } = Dimensions.get("window");
 const SIDEBAR_WIDTH = width * 0.7;
 const MainLogo = require("../assets/images/logo_original.png");
-const router = useRouter();
+
 
 export default function Sidebar({ menuItems = [], onSelect }) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const slideAnim = useRef(new Animated.Value(-SIDEBAR_WIDTH)).current;
+  const [userSession, setUserSession] = useState(null);
+
+   useEffect(() => {
+          const fetchSession = async () => {
+              const session = await loadSession();
+              if (session) {
+                  setUserSession(session);
+                  
+              } else {
+                  console.log("Error al cargar sesion.");
+                  
+              }
+          };
+          fetchSession();
+      }, []);
 
   const toggleSidebar = () => {
     if (open) {
@@ -44,7 +61,7 @@ export default function Sidebar({ menuItems = [], onSelect }) {
       console.log("Sesión eliminada correctamente");
       
       // Redirigir a login
-      router.push("/login");
+      router.push("/index");
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
     }
@@ -62,12 +79,15 @@ export default function Sidebar({ menuItems = [], onSelect }) {
       {/* Backdrop (clic para cerrar) */}
       {open && <TouchableOpacity style={styles.backdrop} onPress={toggleSidebar} />}
 
-      {/* Sidebar */}
+     
       <Animated.View style={[styles.sidebar, { transform: [{ translateX: slideAnim }] }]}>
         <View style={{ flex: 1 }}>
-          {/* Logo */}
+      
           <Image source={MainLogo} style={styles.mainlogo} />
-
+          <View style={styles.userContainer}>
+          <Text style={styles.welcomeLabel}>👤 Bienvenido:</Text>
+          <Text style={styles.username}>{userSession?.username ?? "Invitado"}</Text>
+        </View>
           {/* Menú */}
           {menuItems.map((item, index) => (
             <MenuItemCard
@@ -152,4 +172,26 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
+  userContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  height:"8%",
+  marginVertical: 15,
+  paddingHorizontal: 10,
+  backgroundColor: '#f0f4f8',
+  borderRadius: 8,
+},
+
+welcomeLabel: {
+  fontSize: 18,
+  color: '#333',
+  fontWeight: '600',
+  marginRight: 6,
+},
+
+username: {
+  fontSize: 18,
+  color: '#000000ff',
+  fontWeight: '700',
+},
 });

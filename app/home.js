@@ -11,6 +11,9 @@ import { useRouter } from 'expo-router';
 import NavBar from "../components/NavBar";
 import Sidebar from "../components/SideBar";
 import { loadSession, removeSession } from "../utils/session";
+import Loading from "../components/Loading";
+import NetInfo from '@react-native-community/netinfo';
+import OfflineScreen from "../components/OffLineScreen";
 
 
 function HomeMap() {
@@ -22,57 +25,83 @@ function HomeMap() {
     const [presasbleStatus, setpresasbleStatus] = useState(true);
     const [UnitSelected, setSelectedUnit] = useState([]);
     const [userSession, setUserSession] = useState(null);
-    const CarImage = require("../assets/images/carimage.png");
+    const [isConnected, setIsConnected] = useState(false);
+    const [retryKey, setRetryKey] = useState(0);
+    
+    {/*Aqui valido si hay conexion*/}
     useEffect(() => {
-        const fetchSession = async () => {
-            const session = await loadSession();
-            if (session) {
-                setUserSession(session);
+        const unsubscribe = NetInfo.addEventListener(state => {
+        setIsConnected(state.isConnected);
+        });
 
-            } else {
-                // Si no hay sesión, volver al login
-                router.replace("/login");
-            }
-        };
-        fetchSession();
+        return () => unsubscribe();
     }, []);
+    {/*Reintentar conexion */}
+    const handleRetry = async () => {
+    const state = await NetInfo.fetch();
+    setIsConnected(state.isConnected);
+    setRetryKey(prev => prev + 1); 
+  };
 
-    useEffect(() => {
-        if (!userSession) return;
+  useEffect(() => {
+    const fetchSession = async () => {
+      const session = await loadSession();
+      if (session) {
+        setUserSession(session);
+      } else {
+        router.replace("/index");
+      }
+    };
 
-        const fetchData = async () => {
-            try {
-                const data = await getUnidades(userSession.user_id);
-                if (data && data.resultado && Array.isArray(data.resultado.resultado)) {
-                    setLoading(false);
-                    setUnidades(data.resultado.resultado);
-                } else {
-                    console.log("No se encontraron unidades");
-                }
-            } catch (error) {
-                console.error("Error cargando unidades:", error);
-            }
-        };
+    if (isConnected) {
+      fetchSession();
+    }
+  }, [isConnected]);
 
-        fetchData();
-    }, [userSession]);
+  useEffect(() => {
+    if (!userSession || !isConnected) return;
+
+    const fetchData = async () => {
+      try {
+        const data = await getUnidades(userSession.user_id);
+        if (data?.resultado?.resultado) {
+          setUnidades(data.resultado.resultado);
+        } else {
+          console.log("No se encontraron unidades");
+        }
+      } catch (error) {
+        console.error("Error cargando unidades:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [userSession, isConnected]);
+
+  if (!isConnected) {
+    return  <OfflineScreen onRetry={handleRetry} key={retryKey} />;
+  }
 
     if (loading) {
         return (
-            <View style={styles.loadingContainer}>
-                <View style={{ width: '100%' }}>
-                    <ActivityIndicator size="large" color="#156082" />
-                </View>
-            </View>
+            <Loading />
         );
 
     }
-
     const Col = ({ numRows, children }) => {
         return (
             <View style={styles[`col${numRows}`]}>{children}</View>
         )
     }
+    {/* <Sidebar menuItems={[
+                    { label: "GeoCercas", route:"/settings/geocercas" },
+
+                    
+                ]}
+                    onSelect={(item) => router.push(item.route)}>
+
+                </Sidebar>*/}
 
 
     return (
@@ -81,12 +110,7 @@ function HomeMap() {
                 <NavBar>
 
                 </NavBar>
-                <Sidebar menuItems={[
-                    { label: "GeoCercas", route:"/settings/geocercas" },
-
-                    
-                ]}
-                    onSelect={(item) => router.push(item.route)}>
+                <Sidebar >
 
                 </Sidebar>
 

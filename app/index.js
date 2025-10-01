@@ -1,9 +1,9 @@
-import { StyleSheet, View, Text, Image, TextInput, Pressable, ActivityIndicator  } from "react-native";
+import { StyleSheet, View, Text, Image, TextInput, Pressable, ActivityIndicator } from "react-native";
 import { FontAwesome } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import doLogin from "../lib/login";
 import { useRouter } from 'expo-router';
-import { saveSession , loadSession } from "../utils/session";
+import { saveSession, loadSession } from "../utils/session";
 
 
 export default function LogIn() {
@@ -16,6 +16,19 @@ export default function LogIn() {
     const [passStatus, setStatus] = useState(true);
     const [userSession, setUserSession] = useState(null);
 
+    {/*Primero validamos si hay una sesion guardada */ }
+    useEffect(() => {
+        const fetchSession = async () => {
+            const session = await loadSession();
+            if (session) {
+                router.replace("/home");
+            } 
+        };
+
+        fetchSession();
+    }, []);
+
+
     const handleChange = (fieldName, value) => {
         setInputValues((prev) => ({ ...prev, [fieldName]: value }));
     };
@@ -25,12 +38,11 @@ export default function LogIn() {
             const data = await doLogin(inputValue.username, inputValue.pass);
             if (data.tipo == 1 && data != null) {
                 try {
-                    await saveSession(data.resultado.id_empresa, data.resultado.usuario); 
-                    if (await loadSession()){
+                    await saveSession(data.resultado.id_empresa, data.resultado.usuario);
+                    if (await loadSession()) {
                         router.push('/home');
-                        
                     }
-                }catch{
+                } catch {
                     alert("Error al cargar la sesion.")
                 }
             } else {
@@ -47,14 +59,14 @@ export default function LogIn() {
             setStatus(true);
         }
     }
-    
+
 
     return (
         <View style={styles.container}>
             <Image source={MainLogo} style={styles.logo} />
 
             <View style={styles.inputContainer}>
-               
+
                 <View style={styles.inputWrapper}>
                     <FontAwesome name="user" size={24} color="#888" style={styles.icon} />
                     <TextInput
@@ -64,7 +76,7 @@ export default function LogIn() {
                         value={inputValue.username}
                         onChangeText={(text) => handleChange("username", text)}
                     />
-                     
+
                 </View>
 
                 <View style={styles.inputWrapper}>

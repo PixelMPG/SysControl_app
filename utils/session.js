@@ -3,6 +3,8 @@ import * as SecureStore from 'expo-secure-store';
 // Guardar datos
 export  async function saveSession(user_id, username) {
   try {
+    
+    
     await SecureStore.setItemAsync(
       "user_session",
       JSON.stringify({ user_id, username })
