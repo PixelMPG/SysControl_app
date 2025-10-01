@@ -9,6 +9,7 @@ export default function Layout() {
       <Stack.Screen name="login" options={{ headerShown: false}} />
       <Stack.Screen name="home" options={{ title:"Localizate", headerShown: false}} />
       <Stack.Screen name="unit_route" options={{ title:"Ruta", headerShown: true}} />
+       <Stack.Screen name="settings" options={{ title: "Configuración" ,headerShown: false}} />
     </Stack>
     </GestureHandlerRootView>
     

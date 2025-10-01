@@ -1,11 +1,11 @@
 import React from "react";
 import { TouchableOpacity, View, Text, StyleSheet, Image } from "react-native";
 
-export default function MenuItemCard({ label, icon, onPress }) {
+export default function MenuItemCard({ label, route, onPress }) {
   return (
     <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
       <View style={styles.content}>
-        {icon && <Image source={icon} style={styles.icon} />}
+        {/*icon && <Image source={icon} style={styles.icon} />*/}
         <Text style={styles.text}>{label}</Text>
       </View>
     </TouchableOpacity>

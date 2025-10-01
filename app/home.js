@@ -82,11 +82,11 @@ function HomeMap() {
 
                 </NavBar>
                 <Sidebar menuItems={[
-                    { label: "GeoCercas" },
+                    { label: "GeoCercas", route:"/settings/geocercas" },
 
                     
                 ]}
-                    onSelect={(item) => console.log("Seleccionaste:", item.label)}>
+                    onSelect={(item) => router.push(item.route)}>
 
                 </Sidebar>
 
