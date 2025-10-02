@@ -1,6 +1,6 @@
 {
   "expo": {
-    "scheme":"SysControl",
+    "scheme": "SysControl",
     "name": "SysControl",
     "slug": "SysControl",
     "version": "1.0.0",
@@ -14,9 +14,12 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.SysControl",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
-    
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
@@ -40,7 +43,5 @@
         "projectId": "a8dcc010-ae8d-4ed0-99e7-08a70d24e1f8"
       }
     }
-    
   }
-  
 }

@@ -20,12 +20,11 @@ export default function UnitRoute() {
  useEffect(() => {
   async function fetchData() {
     try {
-      // Obtener datos de ruta y paradas
       const data = await Get_unit_route(esn);
       const stops = await Get_unit_stops(esn);
 
       if (data?.resultado && Array.isArray(data.resultado) && stops?.resultado && Array.isArray(stops.resultado) ) {
-        // Mapear datos de ruta con icono
+        
         const routeData = data.resultado.map(item => ({
           ...item,
           icono: icon,
@@ -86,9 +85,6 @@ export default function UnitRoute() {
     </View>
   );
 }
-
-
-
 
 
 const styles = StyleSheet.create({

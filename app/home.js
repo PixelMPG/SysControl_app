@@ -129,7 +129,7 @@ function HomeMap() {
                             if (unidadSeleccionada != null || unidadSeleccionada != "") {
                                 setpresasbleStatus(false);
                                 setSelectedUnit(unidadSeleccionada);
-                                console.log("Unidad seleccionada:", unidadSeleccionada.icono);
+                                console.log("Unidad seleccionada:", unidadSeleccionada.estatus);
                             }
                         }}
                         onLoadEnd={() => {
@@ -160,7 +160,7 @@ function HomeMap() {
                                         <Row><Text style={styles.dataText}>{UnitSelected?.alias}</Text></Row>
                                         <Row><Text style={styles.dataText}>{UnitSelected?.latitude}</Text></Row>
                                         <Row><Text style={styles.dataText}>{UnitSelected?.longitude}</Text></Row>
-                                        <Row><Text style={styles.dataText}>{UnitSelected?.estatus}</Text></Row>
+                                        <Row><Text style={styles.dataText}>{UnitSelected?.estatus == 10 || UnitSelected?.estatus == 13 ? 'Encendido' : 'Apagado'}</Text></Row>
                                     </Col>
 
                                 </View>

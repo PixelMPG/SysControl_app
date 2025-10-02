@@ -61,7 +61,7 @@ export default function Sidebar({ menuItems = [], onSelect }) {
       console.log("Sesión eliminada correctamente");
       
       // Redirigir a login
-      router.push("/index");
+      router.push("/");
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
     }
